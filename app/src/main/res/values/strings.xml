@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">CalcURecipe</string>
+
+    <!-- activity_main -->
+    <string name="home_button">Home</string>
+    <string name="bookmark">Saved Lists</string>
+    <string name="add_recipe_button">Add Custom Recipe</string>
+    <string name="search_button">Search</string>
+    <string name="settings">Settings</string>
+
+    <!-- recipe_editor -->
+    <string name="add_recipe_activity_title">Add New Recipe</string>
+    <string name="choose_image_edit_button">Pick Image</string>
+
+
+</resources>
