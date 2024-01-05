@@ -16,12 +16,14 @@
         android:theme="@style/Theme.CalcURecipe"
         tools:targetApi="31"
         android:requestLegacyExternalStorage="true">
-        <activity
-            android:name=".AddRecipeActivity"
-            android:exported="false"/>
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
+        <activity android:name=".AddRecipeActivity" android:exported="false"/>
+        <activity android:name=".DetailsRecipeActivity" android:exported="false"/>
+        <activity android:name=".EditRecipeActivity" android:exported="false"/>
+        <activity android:name=".SearchActivity" android:exported="false"/>
+        <activity android:name=".SettingsActivity" android:exported="false"/>
+        <activity android:name=".SavedListsActivity" android:exported="false"/>
+        <activity android:name=".FolderContentsActivity" android:exported="false"/>
+        <activity android:name=".MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

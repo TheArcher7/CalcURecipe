@@ -2,4 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="colorPrimary">#1996E3</color>
+    <color name="colorSecondary">#1956E3</color>
+    <color name="background">#CDE1E4</color>
+
+
+    <color name="purple_500">#FF6200EE</color>
+    <color name="primary_blue">#1996E3</color>
+    <color name="variant_blue">#1956E3</color>
+    <color name="background_teal">#CDE1E4</color>
 </resources>

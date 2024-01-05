@@ -12,7 +12,6 @@ import com.mmock.calcurecipe.model.Recipe
 private const val TAG = "AddRecipeActivity"
 
 class AddRecipeActivity : OptionsMenuActivity() {
-    var recipes : ArrayList<Recipe>? = null
     lateinit var chooseImageButton : Button
     lateinit var recipeImage : ImageView
     lateinit var recipeNameTitle : EditText
@@ -27,15 +26,11 @@ class AddRecipeActivity : OptionsMenuActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.recipe_editor_create)
 
-
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.title = "Add Recipe"
 
-        //get recipeList
-        recipes = RecipeManager.getRecipeList()
-
-        //get elements of UI
+        //get the UI elements
         chooseImageButton = findViewById(R.id.rec_ChooseImage)
         recipeImage = findViewById(R.id.rec_Image)
         recipeNameTitle = findViewById(R.id.rec_recipe_name_EditText)
@@ -55,7 +50,7 @@ class AddRecipeActivity : OptionsMenuActivity() {
 
         //set button functionality
         chooseImageButton.setOnClickListener() {
-            //TODO set functionality for image selection button
+            //TODO ImageSelectionActivity. set functionality for image selection button
         }
         cancelButton.setOnClickListener() {
             cancel()
@@ -64,13 +59,6 @@ class AddRecipeActivity : OptionsMenuActivity() {
             save()
         }
 
-    }
-
-    private fun getStringFromEditText(t: EditText) : String {
-        return if (t.text.isEmpty()){
-            ""
-        } else
-            t.text.toString()
     }
 
     fun cancel(){
@@ -82,6 +70,9 @@ class AddRecipeActivity : OptionsMenuActivity() {
 
         //create new recipe
         val recipe = Recipe()
+
+        //TODO save the image
+
         //set values in recipe = UI values
         recipe.name = recipeNameTitle.text.toString()
         recipe.description = recipeDescription.text.toString()

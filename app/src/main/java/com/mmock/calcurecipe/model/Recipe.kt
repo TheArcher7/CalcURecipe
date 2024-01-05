@@ -57,7 +57,7 @@ class Recipe {
     // toString() method for a human-readable string representation
     override fun toString(): String {
         return "Recipe(id=$recipeID, imagePath=$imagePath, imageName=$imageName, name='$name', " +
-                "description='$description', details='$details', liked=$liked)"
+                "description='$description', liked=$liked)"
     }
 
 

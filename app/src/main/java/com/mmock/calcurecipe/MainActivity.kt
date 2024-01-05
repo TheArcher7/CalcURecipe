@@ -7,22 +7,11 @@ package com.mmock.calcurecipe
 //Collapsing toolbar with image, which is good for the recipe details (Kotlin) https://youtu.be/6UmHGn076To?si=6g0NVmKOuvhE2Ust
 
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.widget.Toast
-import android.widget.Toolbar
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.appbar.MaterialToolbar
 import com.mmock.calcurecipe.adapter.RecipeExplorerAdapter
 import com.mmock.calcurecipe.databinding.ActivityMainBinding
 import com.mmock.calcurecipe.model.Recipe
@@ -54,7 +43,8 @@ class MainActivity : OptionsMenuActivity() {
 
         //load recipes
         try{
-            RecipeManager.uploadRecipesFromFile()
+            RecipeManager.loadRecipesFromFile()
+            FolderManager.loadFoldersFromFile()
             //see the Contacts Keeper app for example
             recipeList = RecipeManager.getRecipeList()
         } catch(e : Exception) {
@@ -67,7 +57,7 @@ class MainActivity : OptionsMenuActivity() {
         RecipeManager.setRecipeListener(adapter!!)
 
         //define the recyclerView
-        recipeExplorerRecycler = findViewById<RecyclerView>(R.id.explorerRecyclerView)
+        recipeExplorerRecycler = findViewById(R.id.explorerRecyclerView)
         val layoutManager = LinearLayoutManager(applicationContext)
         recipeExplorerRecycler!!.layoutManager = layoutManager
         recipeExplorerRecycler!!.itemAnimator = DefaultItemAnimator()
@@ -75,10 +65,11 @@ class MainActivity : OptionsMenuActivity() {
 
     }
 
-
-
     fun showRecipe(recipeToShow: Int) {
-        //TODO send intent with recipeToShow to view object to be displayed by recipe_details.xml
+        //send intent with recipeToShow to view object to be displayed by recipe_details.xml
+        val intent = Intent(this, DetailsRecipeActivity::class.java)
+        intent.putExtra("recipe_loc", recipeToShow)
+        startActivity(intent)
     }
 
     fun createNewRecipe(recipe : Recipe) {

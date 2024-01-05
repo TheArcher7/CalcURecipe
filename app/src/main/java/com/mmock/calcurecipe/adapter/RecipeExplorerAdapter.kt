@@ -24,7 +24,6 @@ class RecipeExplorerAdapter(private val mainActivity: MainActivity, private var 
             internal var descr = recipeView.findViewById<View>(R.id.recipeExplorerItemDescription) as TextView
 
             init {
-                //setting the
                 //defining behavior for items
                 recipeView.isClickable = true
                 recipeView.setOnClickListener(this)
@@ -56,7 +55,9 @@ class RecipeExplorerAdapter(private val mainActivity: MainActivity, private var 
         holder.name.text = recipe.name
         holder.descr.text = recipe.description
 
-        //set image
+        //TODO set image
+        //if recipe.imageName == null then use default image
+        //use glide. If successful, then do nothing, if fail then use default image
         /*Glide.with(mainActivity)
             .load(recipe.imagePath)
             .apply(RequestOptions().centerCrop())
