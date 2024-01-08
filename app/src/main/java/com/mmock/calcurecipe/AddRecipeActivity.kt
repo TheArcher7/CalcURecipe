@@ -1,12 +1,28 @@
 package com.mmock.calcurecipe
 
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresExtension
+import com.bumptech.glide.Glide
 import com.mmock.calcurecipe.model.Recipe
+import java.io.FileOutputStream
+import java.io.InputStream
 
 //variables for debugging
 private const val TAG = "AddRecipeActivity"
@@ -21,6 +37,12 @@ class AddRecipeActivity : OptionsMenuActivity() {
     lateinit var saveButton : Button
 
     private var toolbar : androidx.appcompat.widget.Toolbar? = null
+
+    // Activity result launcher for the photo picker
+    private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
+    private lateinit var resultLauncher: ActivityResultLauncher<Intent>
+    private var imagePath = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,9 +71,11 @@ class AddRecipeActivity : OptionsMenuActivity() {
         })
 
         //set button functionality
+        registerResult()
         chooseImageButton.setOnClickListener() {
-            //TODO ImageSelectionActivity. set functionality for image selection button
+            pickImage()
         }
+
         cancelButton.setOnClickListener() {
             cancel()
         }
@@ -59,6 +83,65 @@ class AddRecipeActivity : OptionsMenuActivity() {
             save()
         }
 
+    }
+
+    private fun pickImage(){
+        Log.d(TAG, "Picking Image from Gallery")
+        // Launch the photo picker
+        val pickMediaRequest = PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+        pickMedia.launch(pickMediaRequest)
+    }
+
+    private fun registerResult(){
+        // Initialize the photo picker activity result launcher
+        pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            try {
+                if (uri != null) {
+                    // Get the bitmap from the URI
+                    val inputStream: InputStream? = contentResolver.openInputStream(uri)
+                    val bitmap: Bitmap? = BitmapFactory.decodeStream(inputStream)
+
+                    // Save the bitmap to internal storage
+                    val imagePath = saveImageToInternalStorage(bitmap)
+
+                    // Set the imagePath variable to the saved path
+                    this.imagePath = imagePath
+
+                    // Set the image in the ImageView
+                    recipeImage.setImageURI(uri)
+
+                    Log.d("PhotoPicker", "Selected URI: $uri")
+                    Log.d("PhotoPicker", "Image saved to: $imagePath")
+                } else {
+                    Log.d("PhotoPicker", "No media selected")
+                }
+            } catch (e: Exception) {
+                // Handle exceptions, such as IOException or decoding issues
+                Log.e("PhotoPicker", "Error processing image", e)
+                Toast.makeText(this, "Error processing image", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun saveImageToInternalStorage(bitmap: Bitmap?): String {
+        val filename = "image_${System.currentTimeMillis()}.jpg"
+        val fileOutputStream: FileOutputStream = openFileOutput(filename, Context.MODE_PRIVATE)
+
+        bitmap?.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+        fileOutputStream.close()
+
+        return getFileStreamPath(filename).absolutePath
+    }
+
+    fun displayImage(path: String){
+        if (path == "") {
+            //use default image
+            recipeImage.setImageResource(R.drawable.default_recipe_image_pancakes)
+            return
+        }
+        Glide.with(this)
+            .load(path)
+            .into(recipeImage)
     }
 
     fun cancel(){
@@ -71,22 +154,19 @@ class AddRecipeActivity : OptionsMenuActivity() {
         //create new recipe
         val recipe = Recipe()
 
-        //TODO save the image
+        //set the image
+        recipe.imagePath = imagePath
 
         //set values in recipe = UI values
         recipe.name = recipeNameTitle.text.toString()
         recipe.description = recipeDescription.text.toString()
         recipe.details = recipeSteps.text.toString()
+
         //save the recipe to RecipeManager
         RecipeManager.addRecipe(recipe)
-        RecipeManager.saveRecipesToFile()
+        RecipeManager.saveRecipesToFile(applicationContext)
+
         //return to previous activity
         finish()
     }
-
-    override fun onPause() {
-        super.onPause()
-        finish()
-    }
-
 }

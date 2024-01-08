@@ -1,7 +1,18 @@
 package com.mmock.calcurecipe
 
+import android.content.Context
 import android.util.Log
 import com.mmock.calcurecipe.model.Recipe
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONTokener
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.IOException
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
+import java.io.Writer
 
 //optional TODO implement caching
 //optional TODO arraylist sorting by different types (I would like to use something like RecipeManager.SORT_BY_ID_DESC when calling the sort method from other classes)
@@ -9,7 +20,8 @@ import com.mmock.calcurecipe.model.Recipe
 
 object RecipeManager {
     private const val TAG = "RecipeManager"
-    private val masterRecipeList : ArrayList<Recipe> = ArrayList()
+    private const val filename = "CalcURecipe_Recipes.json"
+    private var masterRecipeList : ArrayList<Recipe> = ArrayList()
     private var recipeListener: RecipeListener? = null
 
     // Interface for the listener
@@ -46,15 +58,37 @@ object RecipeManager {
     }
 
     // Delete a recipe from the master list by its ID
-    fun deleteRecipe(recipeId: Int) {
+    fun deleteRecipe(recipeId: Int, context: Context) {
         val position = masterRecipeList.indexOfFirst { it.recipeID == recipeId }
         if (position != -1) {
+            // Delete the associated image from internal storage
+            val imagePath = masterRecipeList[position].imagePath
+            deleteImageFromInternalStorage(imagePath, context)
+
+            // Remove the recipe from the master list
             masterRecipeList.removeAt(position)
 
             // Notify the listener (adapter) about the deleted recipe
             recipeListener?.onRecipeDeleted(position)
 
             Log.d(TAG, "Deleted recipe with id = $recipeId")
+        }
+    }
+
+    // Helper function to delete an image from internal storage
+    private fun deleteImageFromInternalStorage(imagePath: String?, context: Context) {
+        if (imagePath != null) {
+            try {
+                val file = File(imagePath)
+                val deleted = file.delete()
+                if (deleted) {
+                    Log.d(TAG, "Deleted image from internal storage: $imagePath")
+                } else {
+                    Log.e(TAG, "Failed to delete image from internal storage: $imagePath")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error deleting image from internal storage", e)
+            }
         }
     }
 
@@ -65,7 +99,7 @@ object RecipeManager {
 
     fun getRecipeByPosition(recipeArraylistInt: Int) : Recipe? {
         if ((recipeArraylistInt < 0) or (recipeArraylistInt > masterRecipeList.size)){
-            Log.e("RecipeManager", "OutOfBounds. Error getting recipe from arraylist in RecipeManager.")
+            Log.e("RecipeManager", "OutOfBounds. Error getting recipe from arraylist in RecipeManager. Id = $recipeArraylistInt")
         }
         return masterRecipeList[recipeArraylistInt]
     }
@@ -148,24 +182,68 @@ object RecipeManager {
         return ArrayList(matchingRecipes.sortedBy { it.name })
     }
 
-    fun loadRecipesFromFile() {
-        // Implementation to load recipes from a file
-        // TODO Load recipes from a file
-        // TODO If no recipes in file (meaning newly downloaded app) then load default recipes
-        if(masterRecipeList.size < 1)
-            loadDefaultRecipes()
-        // TODO Access images from media storage
+    @Throws(IOException::class, JSONException::class)
+    fun saveRecipesToFile(context: Context) {
+        val jArray = JSONArray()
+
+        for(r in masterRecipeList)
+            jArray.put(r.convertToJSON())
+
+        var writer: Writer? = null
+        try{
+            val out = context.openFileOutput(filename, Context.MODE_PRIVATE)
+            writer = OutputStreamWriter(out)
+            writer.write(jArray.toString())
+        } finally {
+            writer?.close()
+        }
     }
 
-    fun saveRecipesToFile() {
-        // Implementation to save recipes to a file
-        // TODO Save recipes to a file
+    @Throws(IOException::class, JSONException::class)
+    fun loadRecipesFromFile(context: Context) {
+        if (masterRecipeList.isNotEmpty()) {
+            return
+        } //will only load recipes from file upon app opening
+
+        val recipeList = ArrayList<Recipe>()
+        var reader: BufferedReader? = null
+
+        try {
+            val `in` = context.openFileInput(filename)
+            reader = BufferedReader(InputStreamReader(`in`))
+            val jsonString = StringBuilder()
+
+            for (line in reader.readLine()) {
+                jsonString.append(line)
+            }
+
+            val jArray = JSONTokener(jsonString.toString()).nextValue() as JSONArray
+
+            for (i in 0 until jArray.length()) {
+                recipeList.add(Recipe(jArray.getJSONObject(i)))
+            }
+        } catch (e: FileNotFoundException) {
+            //This happens when we start fresh
+            Log.e(TAG, "No $filename file found.")
+        } finally {
+            reader?.close()
+        }
+
+        Log.d(TAG, "${recipeList.size} recipes loaded from file.")
+
+        masterRecipeList = recipeList
+
+        if(masterRecipeList.isEmpty()) {
+            loadDefaultRecipes()
+        } //will only load default recipes for newly downloaded app
     }
 
     private fun loadDefaultRecipes(){
+        Log.d(TAG, "Loading default recipes.")
+
         var recipe = Recipe(
-            "Grain Salad",
-            "A very strange kind of bread that cannot be baked and does not taste good.",
+            "Morning Bread",
+            "A very strange kind of bread that most people would call a pan \"cake\" since it was traditionally made in a pan.",
             "1 put together some lettuce \n2 add the grain of choice, in this case oatmeal \n3 mix well in bowl and serve"
         )
         addRecipe(recipe)

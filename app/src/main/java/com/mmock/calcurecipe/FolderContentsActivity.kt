@@ -1,6 +1,7 @@
 package com.mmock.calcurecipe
 
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -47,6 +48,8 @@ class FolderContentsActivity : AppCompatActivity() {
         val id = intent.getIntExtra("id", 0)
         folder = FolderManager.getFolderById(id)!!
         folderNameTextView.text = folder.folderName
+        if(folder.folderID == 0){ editButton.visibility = View.GONE } //prevents editing the "liked" list
+
         recipeList = FolderManager.getRecipes(id)
 
         // Set the adapter
@@ -55,8 +58,8 @@ class FolderContentsActivity : AppCompatActivity() {
 
         // Set edit button click listener
         editButton.setOnClickListener {
-            // TODO: Handle edit button click
             // navigate to an edit activity or show an edit dialog
+            editFolder()
         }
 
         backButton.setOnClickListener {
@@ -64,8 +67,17 @@ class FolderContentsActivity : AppCompatActivity() {
         }
     }
 
+    fun editFolder(){
+        // Handle edit button click
+        val dialog = DialogEditFolder()
+        dialog.sendFolderSelected(folder)
+        dialog.show(supportFragmentManager, "")
+        FolderManager.saveFoldersToFile(applicationContext)
+    }
+
     fun goBack(){
-        // TODO: Handle back button click
+        // Handle back button click
         finish()
     }
+
 }

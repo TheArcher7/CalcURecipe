@@ -23,10 +23,10 @@ object PermissionsManager {
         if(ContextCompat.checkSelfPermission(context, permission)
             != PackageManager.PERMISSION_GRANTED){
             //ask for permission
-            Log.d(tag, "Storage permissions not granted. Requesting permissions. (code 1)")
+            Log.d(tag, "Storage permissions not granted. Requesting permissions. (Android 13+ Permissions Request)")
             ActivityCompat.requestPermissions(activity, arrayOf(permission) , MEDIA_PERMISSION_CODE)
         } else {
-            Log.d(tag, "Storage permissions granted. (code 1)")
+            Log.d(tag, "Storage permissions granted. (Android 13+ Permission)")
             //Toast.makeText(context, "Accessing photos from gallery.", Toast.LENGTH_SHORT).show()
         }
 
@@ -38,7 +38,7 @@ object PermissionsManager {
                     == PackageManager.PERMISSION_GRANTED -> {
                 // You can use the API that requires the permission.
                 //Code goes here
-                Log.d(tag, "Storage permissions granted. (code 2)")
+                Log.d(tag, "Storage permissions granted. (Legacy Permission)")
             }
             ActivityCompat.shouldShowRequestPermissionRationale(
                 activity, permission) -> {
@@ -46,7 +46,7 @@ object PermissionsManager {
             }
             else -> {
                 // You can directly ask for the permission.
-                Log.d(tag, "Storage permissions not granted. Requesting permissions. (code 2)")
+                Log.d(tag, "Storage permissions not granted. Requesting permissions. (Legacy Permissions Request)")
                 ActivityCompat.requestPermissions(activity,
                     arrayOf(permission),
                     MEDIA_PERMISSION_CODE)

@@ -33,14 +33,16 @@ class SavedListsActivity : OptionsMenuActivity() {
 
         // Set up the Floating Action Button click listener
         findViewById<FloatingActionButton>(R.id.asl_fabAddFolder).setOnClickListener {
-            Toast.makeText(this, "Add Folder Clicked", Toast.LENGTH_SHORT).show()
             addNewFolder()
             updateFolderList()
         }
     }
 
     private fun addNewFolder(){
-        // TODO: Handle the click event for adding a folder
+        // Handle the click event for adding a folder
+        val dialog = DialogNewFolder()
+        dialog.show(supportFragmentManager, "")
+        FolderManager.saveFoldersToFile(applicationContext)
     }
 
     private fun updateFolderList() {

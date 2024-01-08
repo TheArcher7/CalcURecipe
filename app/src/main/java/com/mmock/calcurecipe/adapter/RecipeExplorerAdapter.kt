@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.mmock.calcurecipe.MainActivity
 import com.mmock.calcurecipe.R
 import com.mmock.calcurecipe.RecipeManager
@@ -55,15 +56,8 @@ class RecipeExplorerAdapter(private val mainActivity: MainActivity, private var 
         holder.name.text = recipe.name
         holder.descr.text = recipe.description
 
-        //TODO set image
-        //if recipe.imageName == null then use default image
-        //use glide. If successful, then do nothing, if fail then use default image
-        /*Glide.with(mainActivity)
-            .load(recipe.imagePath)
-            .apply(RequestOptions().centerCrop())
-            .into(holder.image) */
-
-        //optional TODO define behavior onClick for description to expand (see Gallery Display App 2 for example)
+        // Set the image
+        displayImage(recipe.imagePath, holder.image)
     }
 
     override fun onRecipeAdded(position: Int) {
@@ -74,6 +68,17 @@ class RecipeExplorerAdapter(private val mainActivity: MainActivity, private var 
     override fun onRecipeDeleted(position: Int) {
         // Notify the adapter that an item has been removed
         notifyItemRemoved(position)
+    }
+
+    private fun displayImage(path: String?, recipeImage: ImageView){
+        if (path == "") {
+            //use default image
+            recipeImage.setImageResource(R.drawable.default_recipe_image_pancakes)
+            return
+        }
+        Glide.with(mainActivity)
+            .load(path)
+            .into(recipeImage)
     }
 
 }

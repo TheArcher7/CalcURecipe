@@ -1,22 +1,19 @@
 package com.mmock.calcurecipe.model
 
+import org.json.JSONException
+import org.json.JSONObject
+
 class Recipe {
     var recipeID: Int = -1 // the saved lists hold a reference to the Recipe id
 
     // data for the image
-    var imagePath: String? = null
-    var imageName: String? = null
+    var imagePath: String = ""
 
     lateinit var name: String
     lateinit var description: String
     lateinit var details: String
 
     var liked: Boolean = false
-
-    constructor(imagePath: String?, imageName: String?) {
-        this.imagePath = imagePath
-        this.imageName = imageName
-    }
 
     constructor(name: String, description: String, steps: String) {
         this.name = name
@@ -25,6 +22,38 @@ class Recipe {
     }
 
     constructor() {}
+
+    // JSON properties
+    private val JSON_ID = "recipeId"
+    private val JSON_IMAGE_PATH = "imagePath"
+    private val JSON_NAME = "name"
+    private val JSON_DESCRIPTION = "description"
+    private val JSON_DETAILS = "details"
+    private val JSON_LIKED = "liked"
+
+    // Constructor only used when creating from a JSON object
+    @Throws(JSONException::class)
+    constructor(jo: JSONObject) {
+        recipeID = jo.getInt(JSON_ID)
+        imagePath = jo.getString(JSON_IMAGE_PATH)
+        name = jo.getString(JSON_NAME)
+        description = jo.getString(JSON_DESCRIPTION)
+        details = jo.getString(JSON_DETAILS)
+        liked = jo.getBoolean(JSON_LIKED)
+    }
+
+    // Used for converting the recipe to a JSON object to be saved in a file
+    @Throws(JSONException::class)
+    fun convertToJSON(): JSONObject {
+        val jo = JSONObject()
+        jo.put(JSON_ID, recipeID)
+        jo.put(JSON_IMAGE_PATH, imagePath)
+        jo.put(JSON_NAME, name)
+        jo.put(JSON_DESCRIPTION, description)
+        jo.put(JSON_DETAILS, details)
+        jo.put(JSON_LIKED, liked)
+        return jo
+    }
 
     // equals() method for proper object comparison
     override fun equals(other: Any?): Boolean {
@@ -35,7 +64,6 @@ class Recipe {
 
         if (recipeID != other.recipeID) return false
         if (imagePath != other.imagePath) return false
-        if (imageName != other.imageName) return false
         if (name != other.name) return false
         if (description != other.description) return false
         if (details != other.details) return false
@@ -46,7 +74,6 @@ class Recipe {
     override fun hashCode(): Int {
         var result = recipeID
         result = 31 * result + (imagePath?.hashCode() ?: 0)
-        result = 31 * result + (imageName?.hashCode() ?: 0)
         result = 31 * result + name.hashCode()
         result = 31 * result + description.hashCode()
         result = 31 * result + details.hashCode()
@@ -56,7 +83,7 @@ class Recipe {
 
     // toString() method for a human-readable string representation
     override fun toString(): String {
-        return "Recipe(id=$recipeID, imagePath=$imagePath, imageName=$imageName, name='$name', " +
+        return "Recipe(id=$recipeID, imagePath=$imagePath, name='$name', " +
                 "description='$description', liked=$liked)"
     }
 

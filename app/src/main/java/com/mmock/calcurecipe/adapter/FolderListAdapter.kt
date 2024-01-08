@@ -14,7 +14,8 @@ import com.mmock.calcurecipe.FolderManager
 import com.mmock.calcurecipe.R
 
 class FolderListAdapter(private val savedListsActivity: SavedListsActivity, private var folderList: ArrayList<ListFolder>)
-    : RecyclerView.Adapter<FolderListAdapter.ListViewHolder>() {
+    : RecyclerView.Adapter<FolderListAdapter.ListViewHolder>()
+    , FolderManager.FolderListener {
 
     class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val folderImage: ImageView = itemView.findViewById(R.id.fi_folderImage)
@@ -30,7 +31,7 @@ class FolderListAdapter(private val savedListsActivity: SavedListsActivity, priv
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
         val currentFolder = folderList[position]
 
-        // TODO Set folder image (replace with your actual image loading logic)
+        // optional TODO Set folder image (replace with your actual image loading logic)
         // For example, using a library like Picasso or Glide
         // Picasso.get().load(currentFolder.imagePath).into(holder.folderImage)
 
@@ -62,5 +63,18 @@ class FolderListAdapter(private val savedListsActivity: SavedListsActivity, priv
         folderList.clear()
         folderList.addAll(newFolderList)
         notifyDataSetChanged()
+    }
+
+    override fun onFolderUpdated() {
+        notifyDataSetChanged()
+    }
+
+    override fun onFolderAdded(position: Int) {
+        notifyItemInserted(position)
+    }
+
+    override fun onFolderDeleted(position: Int) {
+        //not necessary, but is here anyway
+        notifyItemRemoved(position)
     }
 }

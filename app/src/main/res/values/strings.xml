@@ -19,5 +19,13 @@
     <string name="search_prompt">Enter Recipe Name</string>
     <string name="search_results_number_default">0</string>
 
+    <string name="recipe_image_content_description">Recipe Image</string>
+
+    <string name="save">Save</string>
+    <string name="folder_dialog_hint_text">Folder Name</string>
+    <string name="help_info_text">How to use this app:\n\nYou can view all your recipes in this app through the home page. You can tap on any recipe to view its details. \n\nYou can save recipes to lists when looking at their details and scrolling to the bottom until you see the bookmark icon. Tapping on it lets you save it to lists that you have created. You can also save it to the liked list. \n\nTo view your saved lists, go back to the home screen and click the bookmark icon along the app\'s navigation bar. Here you can see and interact with your lists. You can add or delete lists and it will not delete the recipes inside. You can still see them from the home page. You cannot delete or modify the liked list. \n\nYou can also search for any recipe in the app. Simply enter its name and results will be shown to you. \n\nThere are only a few settings because the app is new and does not connect to the internet. In the future, more settings will be available.\n\nEnjoy! </string>
+    <string name="app_version_and_author">App version 1.0 made by Micah</string>
+    <string name="settings_dividers_text">Show Dividers Between List Items</string>
+
 
 </resources>

@@ -1,5 +1,6 @@
 package com.mmock.calcurecipe
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,6 +9,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mmock.calcurecipe.adapter.RecipeCondensedAdapter
@@ -38,6 +40,17 @@ class SearchActivity : OptionsMenuActivity() {
         recycler = findViewById(R.id.ash_searchRecyclerView)
         recycler.layoutManager = LinearLayoutManager(applicationContext)
         recycler.itemAnimator = DefaultItemAnimator()
+
+        //add a dividing line between list items
+        val prefs = getSharedPreferences("CalcURecipePrefs", Context.MODE_PRIVATE)
+        val showDividers = prefs.getBoolean("dividers", true)
+        if (showDividers)
+            recycler.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
+        else {
+            //check there are some dividers or the app will crash
+            if(recycler.itemDecorationCount > 0)
+                recycler.removeItemDecorationAt(0)
+        }
 
         //get recipes to show
         recipeList = RecipeManager.getRecipeList()
