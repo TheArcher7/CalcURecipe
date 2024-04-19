@@ -12,6 +12,8 @@ package com.mmock.calcurecipe
 //Bottom view navigation bar across multiple fragments (Kotlin) https://youtu.be/L_6poZGNXOo?si=Jfar3kOojvIiXLSy
 //Collapsing toolbar with image, which is good for the recipe details (Kotlin) https://youtu.be/6UmHGn076To?si=6g0NVmKOuvhE2Ust
 //Android 13 Photo Picker (Java) https://youtu.be/uHX5NB6wHao?si=ONDMvCHnOVMkqN9t
+//Java Unit Testing with JUnit (Java) https://youtu.be/vZm0lHciFsQ?si=Zw2AWUAvm9C_-G4f
+//Testing for exceptions (Kotlin) https://www.baeldung.com/kotlin/assertfailswith
 
 
 import android.content.Context

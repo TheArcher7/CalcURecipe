@@ -33,6 +33,10 @@
             </intent-filter>
         </activity>
 
+
+        <uses-library android:name="android.test.mock"/>
+        <uses-library android:name="android.test.runner"/>
+
         <!-- You may need to trigger Google Play services to install the backported photo picker module. https://developer.android.com/training/data-storage/shared/photopicker#:~:text=Older%20devices%20that%20run%20Android%204.4%20(API%20level%2019)%20through%20Android%2010%20(API%20level%2029)%20and%20Android%20Go%20devices%20running%20Android%2011%20or%2012%20that%20support%20Google%20Play%20services%20can%20install%20a%20backported%20version%20of%20the%20photo%20picker. -->
     </application>
 

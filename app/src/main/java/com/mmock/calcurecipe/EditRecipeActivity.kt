@@ -146,7 +146,7 @@ class EditRecipeActivity : AppCompatActivity() {
     fun delete(){
         val idToDelete = recipe?.recipeID
         if (idToDelete != null) {
-            RecipeManager.deleteRecipe(idToDelete, this)
+            RecipeManager.deleteRecipe(idToDelete)
             val numFoldersRecipeRemovedFrom =
                 FolderManager.deleteRecipe(idToDelete)
 

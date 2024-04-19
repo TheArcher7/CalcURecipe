@@ -54,16 +54,16 @@ object RecipeManager {
         // Notify the listener (adapter) about the new recipe
         recipeListener?.onRecipeAdded(position)
 
-        Log.d(TAG, "Created a new recipe with id = ${recipe.recipeID}")
+        //Log.d(TAG, "Created a new recipe with id = ${recipe.recipeID}")
     }
 
     // Delete a recipe from the master list by its ID
-    fun deleteRecipe(recipeId: Int, context: Context) {
+    fun deleteRecipe(recipeId: Int) {
         val position = masterRecipeList.indexOfFirst { it.recipeID == recipeId }
         if (position != -1) {
             // Delete the associated image from internal storage
             val imagePath = masterRecipeList[position].imagePath
-            deleteImageFromInternalStorage(imagePath, context)
+            deleteImageFromInternalStorage(imagePath)
 
             // Remove the recipe from the master list
             masterRecipeList.removeAt(position)
@@ -71,23 +71,23 @@ object RecipeManager {
             // Notify the listener (adapter) about the deleted recipe
             recipeListener?.onRecipeDeleted(position)
 
-            Log.d(TAG, "Deleted recipe with id = $recipeId")
+            //Log.d(TAG, "Deleted recipe with id = $recipeId")
         }
     }
 
     // Helper function to delete an image from internal storage
-    private fun deleteImageFromInternalStorage(imagePath: String?, context: Context) {
+    private fun deleteImageFromInternalStorage(imagePath: String?) {
         if (imagePath != null) {
             try {
                 val file = File(imagePath)
                 val deleted = file.delete()
                 if (deleted) {
-                    Log.d(TAG, "Deleted image from internal storage: $imagePath")
+                    //Log.d(TAG, "Deleted image from internal storage: $imagePath")
                 } else {
-                    Log.e(TAG, "Failed to delete image from internal storage: $imagePath")
+                    //Log.e(TAG, "Failed to delete image from internal storage: $imagePath")
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Error deleting image from internal storage", e)
+                //Log.e(TAG, "Error deleting image from internal storage", e)
             }
         }
     }
