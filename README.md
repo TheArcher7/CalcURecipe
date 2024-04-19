@@ -8,6 +8,8 @@ minSdk = 24
 
 targetSdk = 34
 
+Works best on a medium sized phone. Other device layouts not implemented. Doesn't connect to the internet. Requires file storage access permissions.
+
 ## Download
 
 This app hasn't been released on the Google Play Store yet
