@@ -5,7 +5,8 @@ This is an Android app created for CSC475 at CSU-Global in January 2024. It stor
 ## App Info
 
 minSdk = 24
-targetSdk 34
+
+targetSdk = 34
 
 ## Download
 
