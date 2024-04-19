@@ -4,9 +4,8 @@ This is an Android app created for CSC475 at CSU-Global in January 2024. It stor
 
 ## App Info
 
-minSdk = 24
-
-targetSdk = 34
+- minSdk = 24
+- targetSdk = 34
 
 Works best on a medium sized phone. Other device layouts not implemented. Doesn't connect to the internet. Requires file storage access permissions.
 
