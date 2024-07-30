@@ -11,4 +11,4 @@ Works best on a medium sized phone. Other device layouts not implemented. Doesn'
 
 ## Download
 
-This app hasn't been released on the Google Play Store yet
+This app hasn't been released on the Google Play Store. Please read Module 6 Milestone for more information about the functionality and structure of the app.
